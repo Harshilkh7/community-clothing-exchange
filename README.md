@@ -90,7 +90,7 @@ Coordinate with other users to finalize your swap. Earn points for successful ex
 
 ## 📽️ Video
 
-[![Watch Demo on Google Drive](https://img.shields.io/badge/Watch%20Demo-Google%20Drive-blue?logo=google-drive)]([https://drive.google.com/file/d/VIDEO_ID/view?usp=sharing](https://drive.google.com/file/d/1JJ0FekBHfBrvwpEIEAShBl5lrG5wW2rd/view?usp=drive_link))
+[![Watch Demo on Google Drive](https://img.shields.io/badge/Watch%20Demo-Google%20Drive-blue?logo=google-drive)](https://drive.google.com/file/d/1JJ0FekBHfBrvwpEIEAShBl5lrG5wW2rd/view?usp=drive_link)
 
 > Click the badge above to watch the demo hosted on Google Drive.
 
