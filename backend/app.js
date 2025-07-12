@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const authRoutes = require('./routes/auth');
 const itemRoutes = require('./routes/items');
+const userRoutes = require('./routes/user');
+const adminRoutes = require('./routes/admin');
 const path = require('path');
 
 dotenv.config();
@@ -23,5 +25,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Routes
 app.use('/auth', authRoutes);
 app.use('/items', itemRoutes);
+app.use('/users', userRoutes);
+app.use('/admin', adminRoutes);
 
 module.exports = app;

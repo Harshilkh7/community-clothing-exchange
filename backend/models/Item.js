@@ -10,6 +10,7 @@ const itemSchema = new mongoose.Schema({
   tags: [String],
   imageUrls: [String],
   available: { type: Boolean, default: true },
+  isApproved: { type: Boolean, default: false }, // 🔒 Admin approval
   uploadedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 }, { timestamps: true });
 
