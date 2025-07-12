@@ -65,4 +65,21 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+// @route   GET /items/featured
+// @desc    Get latest featured items for landing page
+// @access  Public
+router.get('/featured', async (req, res) => {
+  try {
+    const items = await Item.find({ available: true })
+      .sort({ createdAt: -1 })
+      .limit(6)
+      .select('title category size condition imageUrls');
+
+    res.json({ items });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: 'Error fetching featured items' });
+  }
+});
+
 module.exports = router;
