@@ -1,6 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const authRoutes = require('./routes/auth');
+const itemRoutes = require('./routes/items');
+const path = require('path');
 
 dotenv.config();
 
@@ -14,7 +17,11 @@ mongoose.connect(process.env.MONGO_URI, {
 }).then(() => console.log('✅ MongoDB connected'))
   .catch(err => console.error('❌ MongoDB error:', err));
 
+// Serve static files (uploaded images)
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 // Routes
-app.use('/auth', require('./routes/auth'));
+app.use('/auth', authRoutes);
+app.use('/items', itemRoutes);
 
 module.exports = app;
