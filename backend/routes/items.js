@@ -7,21 +7,23 @@ const authMiddleware = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
-// Setup local file storage using multer
+// ===== MULTER SETUP FOR IMAGE UPLOAD =====
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'backend/uploads/');
+    cb(null, 'backend/uploads/'); // Destination folder for uploads
   },
   filename: function (req, file, cb) {
-    const uniqueName = `${Date.now()}-${file.originalname}`;
+    const uniqueName = `${Date.now()}-${file.originalname}`; // Prevent filename collisions
     cb(null, uniqueName);
   }
 });
 
 const upload = multer({ storage });
 
+// ===== ROUTES =====
+
 // @route   POST /items
-// @desc    Add new item
+// @desc    Add new item to listing (requires auth)
 // @access  Private
 router.post('/', authMiddleware, upload.array('images', 5), async (req, res) => {
   try {
@@ -41,7 +43,8 @@ router.post('/', authMiddleware, upload.array('images', 5), async (req, res) => 
       tags: tags?.split(',') || [],
       imageUrls,
       uploadedBy: req.user,
-      isApproved: false 
+      isApproved: false, // Default false until admin approves
+      available: true    // Item is available by default
     });
 
     await item.save();
@@ -52,27 +55,13 @@ router.post('/', authMiddleware, upload.array('images', 5), async (req, res) => 
   }
 });
 
-// @route   GET /items/:id
-// @desc    Get single item details
-// @access  Public
-router.get('/:id', async (req, res) => {
-  try {
-    const item = await Item.findById(req.params.id).populate('uploadedBy', 'name email');
-    if (!item) return res.status(404).json({ msg: 'Item not found' });
-
-    res.json({ item });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ msg: 'Error fetching item details' });
-  }
-});
-
+// ✅ IMPORTANT: Place BEFORE `/:id` to avoid route conflict
 // @route   GET /items/featured
-// @desc    Get latest featured items for landing page
+// @desc    Get latest featured (available + approved) items
 // @access  Public
 router.get('/featured', async (req, res) => {
   try {
-    const items = await Item.find({ available: true })
+    const items = await Item.find({ available: true, isApproved: true })
       .sort({ createdAt: -1 })
       .limit(6)
       .select('title category size condition imageUrls');
@@ -81,6 +70,23 @@ router.get('/featured', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ msg: 'Error fetching featured items' });
+  }
+});
+
+// @route   GET /items/:id
+// @desc    Get item details by ID
+// @access  Public
+router.get('/:id', async (req, res) => {
+  try {
+    const item = await Item.findById(req.params.id)
+      .populate('uploadedBy', 'name email');
+
+    if (!item) return res.status(404).json({ msg: 'Item not found' });
+
+    res.json({ item });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: 'Error fetching item details' });
   }
 });
 
@@ -103,7 +109,7 @@ router.post('/:id/swap', authMiddleware, async (req, res) => {
       return res.status(400).json({ msg: 'Not enough points to redeem this item' });
     }
 
-    // Deduct points and mark item as unavailable
+    // Deduct points and update item status
     user.points -= ITEM_COST;
     await user.save();
 
@@ -114,6 +120,22 @@ router.post('/:id/swap', authMiddleware, async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ msg: 'Error processing swap' });
+  }
+});
+
+// @route   GET /items
+// @desc    Get all approved + available items for browsing
+// @access  Public
+router.get('/', async (req, res) => {
+  try {
+    const items = await Item.find({ isApproved: true, available: true })
+      .sort({ createdAt: -1 })
+      .populate('uploadedBy', 'name');
+
+    res.json({ items });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: 'Failed to fetch items' });
   }
 });
 
