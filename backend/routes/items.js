@@ -50,4 +50,19 @@ router.post('/', authMiddleware, upload.array('images', 5), async (req, res) => 
   }
 });
 
+// @route   GET /items/:id
+// @desc    Get single item details
+// @access  Public
+router.get('/:id', async (req, res) => {
+  try {
+    const item = await Item.findById(req.params.id).populate('uploadedBy', 'name email');
+    if (!item) return res.status(404).json({ msg: 'Item not found' });
+
+    res.json({ item });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: 'Error fetching item details' });
+  }
+});
+
 module.exports = router;
