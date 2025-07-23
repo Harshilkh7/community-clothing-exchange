@@ -1,28 +1,3 @@
-## Team Details
-### Team Name 
-Team 3806
-
-### Team Leader Name 
-Harshil Khandelwal  
-✉️ harshilk310@gmail.com  
-📱 +91 79741 83909
-
-### Team Member 1
-Jeet Goyal  
-✉️ jeetgoyal80@gmail.com    
-📱 +91 84391 98167
-
-### Team Member 2
-Abhi Gupta    
-✉️ gupta.abhi.nitb@gmail.com  
-📱 +91 95896 64150
-
-### Team Member 3
-Tanvi Saxena    
-✉️ tanvisaxena412@gmail.com    
-📱 +91 8171908782
-
-## Problem Statement 3
 # ReWear - Community Clothing Exchange
 
 **ReWear** is a web-based platform designed to promote sustainable fashion by enabling users to exchange unused clothing. Users can directly swap items with others or redeem items through a point-based system. The platform’s mission is to reduce textile waste and encourage the reuse of wearable garments.
